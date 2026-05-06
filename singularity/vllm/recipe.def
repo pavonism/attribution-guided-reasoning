@@ -1,0 +1,8 @@
+Bootstrap: docker
+From: vllm/vllm-openai:v0.19.0
+
+%files
+    ./singularity/vllm/requirements.txt /requirements.txt
+
+%post
+    pip install -r /requirements.txt

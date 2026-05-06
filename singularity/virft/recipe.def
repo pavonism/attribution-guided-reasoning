@@ -1,0 +1,24 @@
+Bootstrap: docker
+From: vllm/vllm-openai:v0.13.0
+
+%files
+    ./singularity/virft/requirements.txt /requirements.txt
+
+%post
+    python3 -c "import torch; print('Intial image PyTorch:', torch.__version__)"
+
+    # 2. Upgrade core Python build tools
+    pip install --upgrade pip
+    pip install ninja packaging wheel cmake setuptools-scm "setuptools==80.9.0"
+
+    # 3. Mute DeepSpeeds x86-specific C++ extensions to prevent ARM crashes
+    export DS_BUILD_AIO=0
+    export DS_BUILD_SPARSE_ATTN=0
+    export DS_BUILD_EVOFORMER_ATTN=0
+
+    # 4. Install the rest of the ecosystem
+    pip install --no-cache-dir -r /requirements.txt
+
+    pip install --no-cache-dir --no-build-isolation --no-deps --ignore-installed flash-attn
+
+    python3 -c "import torch; print('Final image PyTorch:', torch.__version__)"

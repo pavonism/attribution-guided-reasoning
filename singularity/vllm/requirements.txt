@@ -1,0 +1,8 @@
+portpicker
+pydantic
+scikit-learn
+pandas
+datasets
+openai-clip
+sentence-transformers
+transformers>=5.5.0
